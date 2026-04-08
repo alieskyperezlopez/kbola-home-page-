@@ -1,8 +1,6 @@
 import { google } from 'googleapis';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // ─── Types (mirror client) ─────────────────────────────────────────────────────
 
 interface EmploymentEntry { address: string; city: string; zip: string; from: string; to: string; }
@@ -198,6 +196,7 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Invalid request body.' }, { status: 400 });
   }
 
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const [sheetsResult, emailResult] = await Promise.allSettled([
     writeToSheets(data),
     resend.emails.send({
